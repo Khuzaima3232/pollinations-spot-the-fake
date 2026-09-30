@@ -1,0 +1,68 @@
+[
+  {
+    "id": "fox",
+    "label": "Red fox",
+    "real": "rounds/fox-real.jpg",
+    "fake": "rounds/fox-fake.png",
+    "credit": "Red fox",
+    "source": "https://en.wikipedia.org/wiki/Red_fox",
+    "tells": [
+      "The eyes are glassy and symmetrical, with identical catchlights in both.",
+      "The paws are black blobs \u2014 no toes, claws or pads.",
+      "The legs are straight tubes with no visible joints.",
+      "The snow shows no footprints and no shadow under the animal."
+    ]
+  },
+  {
+    "id": "raven",
+    "label": "Common raven",
+    "real": "rounds/raven-real.jpg",
+    "fake": "rounds/raven-fake.png",
+    "credit": "Common raven",
+    "source": "https://en.wikipedia.org/wiki/Common_raven",
+    "tells": [
+      "Feathers read as smooth painted layers rather than overlapping barbs.",
+      "The beak has no nostril detail and the eye lacks a nictitating membrane.",
+      "The branch meets the feet with no grip or compression."
+    ]
+  },
+  {
+    "id": "robin",
+    "label": "European robin",
+    "real": "rounds/robin-real.jpg",
+    "fake": "rounds/robin-fake.png",
+    "credit": "European robin",
+    "source": "https://en.wikipedia.org/wiki/European_robin",
+    "tells": [
+      "The breast orange bleeds into surrounding feathers without a defined edge.",
+      "Whiskers or thin twigs often vanish mid-line or duplicate.",
+      "Background bokeh is uniformly round rather than varied."
+    ]
+  },
+  {
+    "id": "seal",
+    "label": "Grey seal",
+    "real": "rounds/seal-real.jpg",
+    "fake": "rounds/seal-fake.png",
+    "credit": "Grey seal",
+    "source": "https://en.wikipedia.org/wiki/Grey_seal",
+    "tells": [
+      "Wet fur lacks individual clumping; it reads as one glossy surface.",
+      "Rocks and water meet with no tide line or foam.",
+      "The eye is a flat dark bead without a wet highlight."
+    ]
+  },
+  {
+    "id": "deer",
+    "label": "Red deer",
+    "real": "rounds/deer-real.jpg",
+    "fake": "rounds/deer-fake.png",
+    "credit": "Red deer",
+    "source": "https://en.wikipedia.org/wiki/Red_deer",
+    "tells": [
+      "Antler tines branch asymmetrically or merge into each other.",
+      "The coat is uniformly smooth instead of showing clumped winter fur.",
+      "No shadow anchors the hooves to the ground."
+    ]
+  }
+]
