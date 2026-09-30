@@ -64,12 +64,22 @@ const round0 = rounds[0];
 const built = buildRound(round0, () => 0.1); // real first
 const right = verdictFor(0, built.realIndex, round0);
 const wrong = verdictFor(1, built.realIndex, round0);
+const timedOut = verdictFor(-1, built.realIndex, round0);
 ok("picking the real image is correct", right.correct === true);
 ok("picking the fake is wrong", wrong.correct === false);
 ok("the wrong verdict says the other one was real", /other one/i.test(wrong.lead), wrong.lead);
 ok("the correct verdict names the animal", right.lead.includes(round0.label.toLowerCase()), right.lead);
 ok("both verdicts carry the tells to teach",
 	right.tells.length === round0.tells.length && wrong.tells.length === round0.tells.length);
+
+// The quest asks for a timer, so running out must be handled, not ignored.
+ok("running out of time is not a correct answer", timedOut.correct === false);
+ok("running out of time is flagged as a timeout", timedOut.timedOut === true);
+ok("a normal pick is not flagged as a timeout", right.timedOut === false && wrong.timedOut === false);
+ok("the timeout verdict says the timer ran out", /timer ran out/i.test(timedOut.lead), timedOut.lead);
+ok("the timeout verdict still reveals which was real",
+	timedOut.lead.includes(String(built.realIndex + 1)), timedOut.lead);
+ok("the timeout verdict still teaches the tells", timedOut.tells.length === round0.tells.length);
 
 /* ---- shuffle / queue ---- */
 
@@ -92,6 +102,9 @@ ok("index.html has the verdict panel", html.includes('id="verdict"'));
 ok("index.html credits Wikipedia", html.includes("Wikipedia"));
 ok("index.html names the fake model", html.includes("flux.1-schnell"));
 ok("index.html has no leftover build placeholder", !html.includes("__SPOT_THE_FAKE_SCRIPT__"));
+ok("index.html has the timer bar", html.includes('id="timer-bar"'));
+ok("index.html has the countdown label", html.includes('id="timer-label"'));
+ok("game.js defines the round length", game.includes("ROUND_SECONDS"));
 
 console.log(failures.length ? `\n${failures.length} FAILED\n${failures.join("\n")}` : "\nall checks passed");
 process.exit(failures.length ? 1 : 0);

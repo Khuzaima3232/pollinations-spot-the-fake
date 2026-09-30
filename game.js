@@ -14,6 +14,9 @@
 	const STREAK_KEY = "spot-the-fake.streak";
 	const BEST_KEY = "spot-the-fake.best";
 
+	/** Seconds to choose. The quest asks for a timer, so running out is a miss. */
+	const ROUND_SECONDS = 15;
+
 	const $ = (id) => document.getElementById(id);
 
 	/** Fisher-Yates, so the fake is not always in the same slot. */
@@ -54,13 +57,18 @@
 
 	/** The verdict line, given the pick and the answer. */
 	function verdictFor(pickedIndex, realIndex, round) {
-		const correct = pickedIndex === realIndex;
+		// pickedIndex of -1 means the timer ran out before a choice was made.
+		const timedOut = pickedIndex < 0;
+		const correct = !timedOut && pickedIndex === realIndex;
 		return {
 			correct,
-			title: correct ? "Correct" : "Not this time",
+			timedOut,
+			title: correct ? "Correct" : timedOut ? "Out of time" : "Not this time",
 			lead: correct
 				? `That one is the real photograph of a ${round.label.toLowerCase()}.`
-				: `The real photograph was the other one — this is the AI fake.`,
+				: timedOut
+					? `The timer ran out. The real photograph was image ${realIndex + 1}.`
+					: "The real photograph was the other one — this is the AI fake.",
 			tells: round.tells,
 		};
 	}
@@ -79,7 +87,48 @@
 		roundNumber: 1,
 		answered: false,
 		random: Math.random,
+		timerId: null,
+		deadline: 0,
 	};
+
+	/** Paint the bar and the countdown; called on a short interval. */
+	function paintTimer() {
+		const remaining = Math.max(0, game.deadline - Date.now());
+		const seconds = remaining / 1000;
+		const ratio = remaining / (ROUND_SECONDS * 1000);
+		$("timer-bar").style.width = `${Math.max(0, Math.min(1, ratio)) * 100}%`;
+		const label = $("timer-label");
+		const wrap = $("timer-wrap");
+		label.textContent = `${seconds.toFixed(1)}s left`;
+		if (seconds <= 5) {
+			label.classList.add("warn");
+			wrap.classList.add("warn");
+		} else {
+			label.classList.remove("warn");
+			wrap.classList.remove("warn");
+		}
+	}
+
+	function stopTimer() {
+		if (game.timerId !== null) {
+			clearInterval(game.timerId);
+			game.timerId = null;
+		}
+	}
+
+	function startTimer() {
+		stopTimer();
+		game.deadline = Date.now() + ROUND_SECONDS * 1000;
+		paintTimer();
+		game.timerId = setInterval(() => {
+			paintTimer();
+			if (Date.now() >= game.deadline) {
+				stopTimer();
+				// Out of time: reveal the answer with no pick.
+				answer(-1);
+			}
+		}, 100);
+	}
 
 	function readNumber(storage, key) {
 		try {
@@ -136,11 +185,13 @@
 			element.addEventListener("click", () => answer(index));
 			board.appendChild(element);
 		});
+		startTimer();
 	}
 
 	function answer(pickedIndex) {
 		if (game.answered) return;
 		game.answered = true;
+		stopTimer();
 
 		const verdict = verdictFor(pickedIndex, game.current.realIndex, game.current);
 

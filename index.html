@@ -81,6 +81,12 @@
   button[hidden] { display: none; }
 
   .hint { color: var(--dim); font-size: 13px; }
+
+  .timer { height: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .timer .bar { height: 100%; width: 100%; background: var(--accent); transition: width .1s linear; }
+  .timer.warn .bar { background: var(--fake); }
+  #timer-label { margin-top: -6px; }
+  #timer-label.warn { color: var(--fake); font-weight: 600; }
   footer { padding: 12px 18px; border-top: 1px solid var(--line); color: var(--dim); font-size: 12.5px; }
   footer a { color: var(--accent); }
   .share { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--ink); white-space: pre-line; }
@@ -101,6 +107,11 @@
       <h2>One of these is a real photograph. One was made by AI. Which is real?</h2>
       <span class="hint" id="subject"></span>
     </div>
+
+    <div class="timer" id="timer-wrap" aria-hidden="true">
+      <div class="bar" id="timer-bar"></div>
+    </div>
+    <div class="hint" id="timer-label"></div>
 
     <div class="board" id="board" role="group" aria-label="Two images, one real and one generated"></div>
 
